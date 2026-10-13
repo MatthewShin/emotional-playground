@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>골목의 불빛</title>
+    <link rel="preload" as="image" href="images/japanese-house-light.png" />
+    <link rel="preload" as="image" href="images/japanese-house-dark-1.png" />
+    <link rel="preload" as="image" href="images/japanese-house-dark-2.png" />
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #071e2b;
+      }
+
+      main {
+        width: min(100%, 680px);
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        /* 보정한 이미지 아래에 빈 줄이 생기지 않도록 하단 5px만 잘라 낸다. */
+        aspect-ratio: 1086 / 1443;
+        overflow: hidden;
+      }
+
+      .scene img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* 원본 이미지마다 장면의 세로 위치가 조금씩 달라 이를 맞춘다. */
+      .scene img[data-alignment="dark-1"] {
+        transform-origin: top left;
+        transform: translateY(-0.07%) scaleY(0.999);
+      }
+
+      .scene img[data-alignment="dark-2"] {
+        transform-origin: top left;
+        transform: translateY(-0.07%) scaleY(0.997);
+      }
+
+      .window-overlay {
+        pointer-events: none;
+        mask-image: radial-gradient(
+          ellipse 24% 15% at 50% 36%,
+          #000 58%,
+          transparent 95%
+        );
+      }
+
+      .window-overlay[hidden] {
+        display: none;
+      }
+
+      .switch {
+        position: absolute;
+        z-index: 1;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .switch:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+      }
+
+      .streetlight-switch {
+        left: 13.5%;
+        top: 11.3%;
+        width: 12.5%;
+        height: 6.5%;
+      }
+
+      .window-switch {
+        left: 48.5%;
+        top: 30.7%;
+        width: 8%;
+        height: 6%;
+      }
+
+      .hint {
+        margin: 0;
+        padding: 0.8rem 1rem 1rem;
+        color: #d3dfe3;
+        font-size: 0.875rem;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="scene">
+        <img
+          id="scene-image"
+          src="images/japanese-house-light.png"
+          alt="해 질 무렵 일본 골목의 이자카야와 가로등"
+          width="1086"
+          height="1448"
+        />
+        <img
+          id="window-overlay"
+          class="window-overlay"
+          src="images/japanese-house-dark-2.png"
+          alt=""
+          width="1086"
+          height="1448"
+          data-alignment="dark-2"
+          hidden
+        />
+        <button
+          id="streetlight-switch"
+          class="switch streetlight-switch"
+          type="button"
+          aria-label="가로등 끄기"
+          aria-pressed="true"
+        ></button>
+        <button
+          id="window-switch"
+          class="switch window-switch"
+          type="button"
+          aria-label="2층 전등 끄기"
+          aria-pressed="true"
+        ></button>
+      </div>
+      <p class="hint">가로등과 2층 창문 안의 전등을 눌러 봐.</p>
+    </main>
+
+    <script>
+      const sceneImage = document.querySelector('#scene-image');
+      const windowOverlay = document.querySelector('#window-overlay');
+      const streetlightSwitch = document.querySelector('#streetlight-switch');
+      const windowSwitch = document.querySelector('#window-switch');
+
+      let streetlightOn = true;
+      let windowLightOn = true;
+
+      function render() {
+        if (streetlightOn && windowLightOn) {
+          sceneImage.src = 'images/japanese-house-light.png';
+          sceneImage.dataset.alignment = '';
+        } else if (streetlightOn) {
+          sceneImage.src = 'images/japanese-house-dark-2.png';
+          sceneImage.dataset.alignment = 'dark-2';
+        } else {
+          sceneImage.src = 'images/japanese-house-dark-1.png';
+          sceneImage.dataset.alignment = 'dark-1';
+        }
+
+        windowOverlay.hidden = streetlightOn || windowLightOn;
+        streetlightSwitch.setAttribute('aria-pressed', String(streetlightOn));
+        streetlightSwitch.setAttribute('aria-label', `가로등 ${streetlightOn ? '끄기' : '켜기'}`);
+        windowSwitch.setAttribute('aria-pressed', String(windowLightOn));
+        windowSwitch.setAttribute('aria-label', `2층 전등 ${windowLightOn ? '끄기' : '켜기'}`);
+      }
+
+      streetlightSwitch.addEventListener('click', () => {
+        streetlightOn = !streetlightOn;
+        render();
+      });
+
+      windowSwitch.addEventListener('click', () => {
+        windowLightOn = !windowLightOn;
+        render();
+      });
+    </script>
+  </body>
+</html>
