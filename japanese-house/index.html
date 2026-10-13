@@ -37,6 +37,14 @@
         overflow: hidden;
       }
 
+      .artwork {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        aspect-ratio: 1086 / 1443;
+      }
+
       .scene img {
         position: absolute;
         top: 0;
@@ -115,63 +123,91 @@
       }
 
       .hint {
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        bottom: 0;
+        left: 0;
         margin: 0;
-        padding: 0.8rem 1rem 1rem;
+        padding: 3rem 1rem calc(1rem + env(safe-area-inset-bottom));
+        background: linear-gradient(transparent, rgba(4, 16, 24, 0.78));
         color: #d3dfe3;
         font-size: 0.875rem;
         text-align: center;
+        pointer-events: none;
+      }
+
+      @media (max-width: 680px) {
+        body {
+          display: block;
+          min-height: 100dvh;
+        }
+
+        .scene {
+          height: 100vh;
+          height: 100dvh;
+          aspect-ratio: auto;
+        }
+
+        .artwork {
+          /* 왼쪽 가로등과 중앙 창문을 살리고 오른쪽을 잘라 낸다. */
+          width: max(100%, calc(100vh * 0.7526));
+          width: max(100%, calc(100dvh * 0.7526));
+        }
       }
     </style>
   </head>
   <body>
     <main>
       <div id="scene" class="scene">
-        <img
-          src="images/japanese-house-light.png"
-          alt="해 질 무렵 일본 골목의 이자카야와 가로등"
-          width="1086"
-          height="1448"
-        />
-        <img
-          class="state-image street-off-image"
-          src="images/japanese-house-dark-1.png"
-          alt=""
-          width="1086"
-          height="1448"
-          data-alignment="dark-1"
-        />
-        <img
-          class="state-image window-off-image"
-          src="images/japanese-house-dark-2.png"
-          alt=""
-          width="1086"
-          height="1448"
-          data-alignment="dark-2"
-        />
-        <img
-          class="state-image window-overlay"
-          src="images/japanese-house-dark-2.png"
-          alt=""
-          width="1086"
-          height="1448"
-          data-alignment="dark-2"
-        />
-        <button
-          id="streetlight-switch"
-          class="switch streetlight-switch"
-          type="button"
-          aria-label="가로등 끄기"
-          aria-pressed="true"
-        ></button>
-        <button
-          id="window-switch"
-          class="switch window-switch"
-          type="button"
-          aria-label="2층 전등 끄기"
-          aria-pressed="true"
-        ></button>
+        <div class="artwork">
+          <img
+            src="images/japanese-house-light.png"
+            alt="해 질 무렵 일본 골목의 이자카야와 가로등"
+            width="1086"
+            height="1448"
+          />
+          <img
+            class="state-image street-off-image"
+            src="images/japanese-house-dark-1.png"
+            alt=""
+            width="1086"
+            height="1448"
+            data-alignment="dark-1"
+          />
+          <img
+            class="state-image window-off-image"
+            src="images/japanese-house-dark-2.png"
+            alt=""
+            width="1086"
+            height="1448"
+            data-alignment="dark-2"
+          />
+          <img
+            class="state-image window-overlay"
+            src="images/japanese-house-dark-2.png"
+            alt=""
+            width="1086"
+            height="1448"
+            data-alignment="dark-2"
+          />
+          <button
+            id="streetlight-switch"
+            class="switch streetlight-switch"
+            type="button"
+            aria-label="가로등 끄기"
+            aria-pressed="true"
+          ></button>
+          <button
+            id="window-switch"
+            class="switch window-switch"
+            type="button"
+            aria-label="2층 전등 끄기"
+            aria-pressed="true"
+          ></button>
+        </div>
+        <p class="hint">가로등과 2층 창문 안의 전등을 눌러 봐.</p>
       </div>
-      <p class="hint">가로등과 2층 창문 안의 전등을 눌러 봐.</p>
     </main>
 
     <script>
