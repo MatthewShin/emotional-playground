@@ -57,6 +57,18 @@
         transform: translateY(-0.07%) scaleY(0.997);
       }
 
+      .state-image {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 450ms ease-in-out;
+      }
+
+      .scene.street-off .street-off-image,
+      .scene.window-off:not(.street-off) .window-off-image,
+      .scene.street-off.window-off .window-overlay {
+        opacity: 1;
+      }
+
       .window-overlay {
         pointer-events: none;
         mask-image: radial-gradient(
@@ -66,8 +78,10 @@
         );
       }
 
-      .window-overlay[hidden] {
-        display: none;
+      @media (prefers-reduced-motion: reduce) {
+        .state-image {
+          transition: none;
+        }
       }
 
       .switch {
@@ -111,23 +125,36 @@
   </head>
   <body>
     <main>
-      <div class="scene">
+      <div id="scene" class="scene">
         <img
-          id="scene-image"
           src="images/japanese-house-light.png"
           alt="해 질 무렵 일본 골목의 이자카야와 가로등"
           width="1086"
           height="1448"
         />
         <img
-          id="window-overlay"
-          class="window-overlay"
+          class="state-image street-off-image"
+          src="images/japanese-house-dark-1.png"
+          alt=""
+          width="1086"
+          height="1448"
+          data-alignment="dark-1"
+        />
+        <img
+          class="state-image window-off-image"
           src="images/japanese-house-dark-2.png"
           alt=""
           width="1086"
           height="1448"
           data-alignment="dark-2"
-          hidden
+        />
+        <img
+          class="state-image window-overlay"
+          src="images/japanese-house-dark-2.png"
+          alt=""
+          width="1086"
+          height="1448"
+          data-alignment="dark-2"
         />
         <button
           id="streetlight-switch"
@@ -148,8 +175,7 @@
     </main>
 
     <script>
-      const sceneImage = document.querySelector('#scene-image');
-      const windowOverlay = document.querySelector('#window-overlay');
+      const scene = document.querySelector('#scene');
       const streetlightSwitch = document.querySelector('#streetlight-switch');
       const windowSwitch = document.querySelector('#window-switch');
 
@@ -157,18 +183,8 @@
       let windowLightOn = true;
 
       function render() {
-        if (streetlightOn && windowLightOn) {
-          sceneImage.src = 'images/japanese-house-light.png';
-          sceneImage.dataset.alignment = '';
-        } else if (streetlightOn) {
-          sceneImage.src = 'images/japanese-house-dark-2.png';
-          sceneImage.dataset.alignment = 'dark-2';
-        } else {
-          sceneImage.src = 'images/japanese-house-dark-1.png';
-          sceneImage.dataset.alignment = 'dark-1';
-        }
-
-        windowOverlay.hidden = streetlightOn || windowLightOn;
+        scene.classList.toggle('street-off', !streetlightOn);
+        scene.classList.toggle('window-off', !windowLightOn);
         streetlightSwitch.setAttribute('aria-pressed', String(streetlightOn));
         streetlightSwitch.setAttribute('aria-label', `가로등 ${streetlightOn ? '끄기' : '켜기'}`);
         windowSwitch.setAttribute('aria-pressed', String(windowLightOn));
