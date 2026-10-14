@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>골목 불빛 모음</title>
+    <style>
+      :root {
+        font-family: "Gulim", "돋움", Arial, sans-serif;
+        color: #263849;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 30px 12px;
+        background: #dfe8ef;
+      }
+
+      .portal {
+        width: min(100%, 760px);
+        margin: 0 auto;
+        border: 2px solid #47779d;
+        background: #fff;
+        box-shadow: 4px 4px 0 #adbeca;
+      }
+
+      header {
+        padding: 18px 20px;
+        border-bottom: 4px solid #f1ba46;
+        background: linear-gradient(#3987c5, #14558f);
+        color: #fff;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.7rem;
+        letter-spacing: -0.08em;
+        text-shadow: 2px 2px 0 #0c467c;
+      }
+
+      main {
+        padding: 18px 20px 26px;
+      }
+
+      h2 {
+        margin: 0 0 16px;
+        padding: 7px 10px;
+        border: 1px solid #b6c9d8;
+        border-left: 6px solid #f0a831;
+        background: #edf4fa;
+        color: #1e4d7c;
+        font-size: 0.95rem;
+      }
+
+      .gallery {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .gallery li + li {
+        margin-top: 6px;
+      }
+
+      .gallery a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        border: 1px solid #a7bac9;
+        background: #f8fafc;
+        color: #064a94;
+        font-weight: bold;
+        text-decoration: underline;
+      }
+
+      .gallery a:hover,
+      .gallery a:focus-visible {
+        border-color: #dd8b18;
+        background: #fff6df;
+      }
+
+      .gallery img {
+        display: block;
+        flex: none;
+        width: 96px;
+        height: 72px;
+        border: 1px solid #c7d2da;
+        object-fit: cover;
+      }
+
+      .house-thumbnail {
+        object-position: center 55%;
+      }
+
+      .street-thumbnail {
+        object-position: center 43%;
+      }
+
+      .title {
+        display: block;
+        font-size: 0.95rem;
+      }
+
+      .title::before {
+        content: "▶";
+        margin-right: 6px;
+        color: #e38719;
+        font-size: 0.7rem;
+      }
+
+      @media (max-width: 560px) {
+        body {
+          padding: 12px;
+        }
+
+        header {
+          padding: 16px;
+        }
+
+        main {
+          padding: 14px;
+        }
+
+        .gallery img {
+          width: 88px;
+          height: 66px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="portal">
+      <header>
+        <h1>골목 불빛 모음</h1>
+      </header>
+      <main>
+        <h2>골목 둘러보기</h2>
+        <ul class="gallery">
+          <li>
+            <a href="./japanese-house/index.html">
+              <img
+                class="house-thumbnail"
+                src="./japanese-house/images/japanese-house-light.png"
+                alt=""
+                width="1086"
+                height="1448"
+              />
+              <span class="title">골목의 불빛</span>
+            </a>
+          </li>
+          <li>
+            <a href="./side-street/index.html">
+              <img
+                class="street-thumbnail"
+                src="./side-street/images/side-street-light.png"
+                alt=""
+                width="1086"
+                height="1448"
+              />
+              <span class="title">언덕길의 불빛</span>
+            </a>
+          </li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>
