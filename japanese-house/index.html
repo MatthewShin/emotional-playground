@@ -37,10 +37,14 @@
         overflow: hidden;
       }
 
-      .artwork {
+      .scene-viewport {
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .artwork {
+        position: relative;
         width: 100%;
         aspect-ratio: 1086 / 1443;
       }
@@ -137,6 +141,10 @@
         pointer-events: none;
       }
 
+      .mobile-hint {
+        display: none;
+      }
+
       @media (max-width: 680px) {
         body {
           display: block;
@@ -150,9 +158,18 @@
         }
 
         .artwork {
-          /* 왼쪽 가로등과 중앙 창문을 살리고 오른쪽을 잘라 낸다. */
           width: max(100%, calc(100vh * 0.7526));
           width: max(100%, calc(100dvh * 0.7526));
+        }
+
+        .scene-viewport {
+          overflow-x: auto;
+          overflow-y: hidden;
+          overscroll-behavior-x: contain;
+        }
+
+        .mobile-hint {
+          display: inline;
         }
       }
     </style>
@@ -160,63 +177,78 @@
   <body>
     <main>
       <div id="scene" class="scene">
-        <div class="artwork">
-          <img
-            src="images/japanese-house-light.png"
-            alt="해 질 무렵 일본 골목의 이자카야와 가로등"
-            width="1086"
-            height="1448"
-          />
-          <img
-            class="state-image street-off-image"
-            src="images/japanese-house-dark-1.png"
-            alt=""
-            width="1086"
-            height="1448"
-            data-alignment="dark-1"
-          />
-          <img
-            class="state-image window-off-image"
-            src="images/japanese-house-dark-2.png"
-            alt=""
-            width="1086"
-            height="1448"
-            data-alignment="dark-2"
-          />
-          <img
-            class="state-image window-overlay"
-            src="images/japanese-house-dark-2.png"
-            alt=""
-            width="1086"
-            height="1448"
-            data-alignment="dark-2"
-          />
-          <button
-            id="streetlight-switch"
-            class="switch streetlight-switch"
-            type="button"
-            aria-label="가로등 끄기"
-            aria-pressed="true"
-          ></button>
-          <button
-            id="window-switch"
-            class="switch window-switch"
-            type="button"
-            aria-label="2층 전등 끄기"
-            aria-pressed="true"
-          ></button>
+        <div
+          id="scene-viewport"
+          class="scene-viewport"
+          tabindex="0"
+          aria-label="골목 이미지 좌우로 스크롤"
+        >
+          <div class="artwork">
+            <img
+              src="images/japanese-house-light.png"
+              alt="해 질 무렵 일본 골목의 이자카야와 가로등"
+              width="1086"
+              height="1448"
+            />
+            <img
+              class="state-image street-off-image"
+              src="images/japanese-house-dark-1.png"
+              alt=""
+              width="1086"
+              height="1448"
+              data-alignment="dark-1"
+            />
+            <img
+              class="state-image window-off-image"
+              src="images/japanese-house-dark-2.png"
+              alt=""
+              width="1086"
+              height="1448"
+              data-alignment="dark-2"
+            />
+            <img
+              class="state-image window-overlay"
+              src="images/japanese-house-dark-2.png"
+              alt=""
+              width="1086"
+              height="1448"
+              data-alignment="dark-2"
+            />
+            <button
+              id="streetlight-switch"
+              class="switch streetlight-switch"
+              type="button"
+              aria-label="가로등 끄기"
+              aria-pressed="true"
+            ></button>
+            <button
+              id="window-switch"
+              class="switch window-switch"
+              type="button"
+              aria-label="2층 전등 끄기"
+              aria-pressed="true"
+            ></button>
+          </div>
         </div>
-        <p class="hint">가로등과 2층 창문 안의 전등을 눌러 봐.</p>
+        <p class="hint">
+          가로등과 2층 창문 안의 전등을 눌러 봐.
+          <span class="mobile-hint">좌우로 밀어 주변도 살펴봐.</span>
+        </p>
       </div>
     </main>
 
     <script>
       const scene = document.querySelector('#scene');
+      const sceneViewport = document.querySelector('#scene-viewport');
       const streetlightSwitch = document.querySelector('#streetlight-switch');
       const windowSwitch = document.querySelector('#window-switch');
 
       let streetlightOn = true;
       let windowLightOn = true;
+
+      requestAnimationFrame(() => {
+        sceneViewport.scrollLeft = (sceneViewport.scrollWidth - sceneViewport.clientWidth) / 2;
+      });
 
       function render() {
         scene.classList.toggle('street-off', !streetlightOn);
