@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>언덕길의 불빛</title>
+    <link rel="preload" as="image" href="images/side-street-light.png" />
+    <link rel="preload" as="image" href="images/side-street-dark.png" />
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #071e2b;
+      }
+
+      main {
+        width: min(100%, 680px);
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1086 / 1440;
+        overflow: hidden;
+      }
+
+      .scene-viewport {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .artwork {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1086 / 1440;
+      }
+
+      .artwork img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .dark-image {
+        opacity: 0;
+        pointer-events: none;
+        /* 원본의 아래쪽 구조물이 조금 더 내려가 있어 세로 위치를 맞춘다. */
+        transform-origin: top left;
+        transform: translateY(0.07%) scaleY(0.994);
+        transition: opacity 450ms ease-in-out;
+      }
+
+      .scene.dark .dark-image {
+        opacity: 1;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dark-image {
+          transition: none;
+        }
+      }
+
+      .switch {
+        position: absolute;
+        z-index: 1;
+        left: 51%;
+        top: 51%;
+        width: 8%;
+        height: 7%;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .switch:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+      }
+
+      .hint {
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        padding: 3rem 1rem calc(1rem + env(safe-area-inset-bottom));
+        background: linear-gradient(transparent, rgba(4, 16, 24, 0.78));
+        color: #d3dfe3;
+        font-size: 0.875rem;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      @media (max-width: 680px) {
+        body {
+          display: block;
+          min-height: 100dvh;
+        }
+
+        .scene {
+          height: 100vh;
+          height: 100dvh;
+          aspect-ratio: auto;
+        }
+
+        .artwork {
+          width: max(100%, calc(100vh * 0.7541667));
+          width: max(100%, calc(100dvh * 0.7541667));
+        }
+
+        .scene-viewport {
+          overflow-x: auto;
+          overflow-y: hidden;
+          overscroll-behavior-x: contain;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div id="scene" class="scene">
+        <div
+          id="scene-viewport"
+          class="scene-viewport"
+          tabindex="0"
+          aria-label="골목 이미지 좌우로 스크롤"
+        >
+          <div class="artwork">
+            <img
+              src="images/side-street-light.png"
+              alt="밤의 언덕길 골목과 도시의 불빛"
+              width="1086"
+              height="1448"
+            />
+            <img
+              class="dark-image"
+              src="images/side-street-dark.png"
+              alt=""
+              width="1086"
+              height="1448"
+            />
+            <button
+              id="light-switch"
+              class="switch"
+              type="button"
+              aria-label="골목등 끄기"
+              aria-pressed="true"
+            ></button>
+          </div>
+        </div>
+        <p class="hint">화면을 잘 찾아서 터치해봐</p>
+      </div>
+    </main>
+
+    <script>
+      const scene = document.querySelector('#scene');
+      const sceneViewport = document.querySelector('#scene-viewport');
+      const lightSwitch = document.querySelector('#light-switch');
+
+      let lightOn = true;
+
+      requestAnimationFrame(() => {
+        sceneViewport.scrollLeft = (sceneViewport.scrollWidth - sceneViewport.clientWidth) / 2;
+      });
+
+      lightSwitch.addEventListener('click', () => {
+        lightOn = !lightOn;
+        scene.classList.toggle('dark', !lightOn);
+        lightSwitch.setAttribute('aria-pressed', String(lightOn));
+        lightSwitch.setAttribute('aria-label', `골목등 ${lightOn ? '끄기' : '켜기'}`);
+      });
+    </script>
+  </body>
+</html>
